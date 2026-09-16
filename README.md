@@ -8,18 +8,18 @@ agent_security_dict 是面向**安全 Agent 漏洞发现、分析与验证能力
 
 ## 当前样本
 
-按现有复现文档记录，仓库包含 **5 个已动态复现样本**和 **1 个待验证候选**。下表展示样本的归档状态，具体条件与证据见对应文档。
+按现有复现文档记录，仓库共收录 **6 个样本条目**，其中 **5 个已有动态复现记录、1 个为待验证候选**。下表展示归档状态，具体条件与证据见对应文档。
 
 | 环境目录 | 样本 | 文档记录状态与关键前提 |
 | --- | --- | --- |
-| [observium-ce-23.9](observium-ce-23.9/) | [System Path 命令注入](observium-ce-23.9/system-path-command-injection/复现情况.md) | 已动态复现；管理员修改路径配置后，经原生 Web 端点触发，Web 执行权限为 www-data。 |
-| [observium-ce-23.9](observium-ce-23.9/) | [Weathermap fping 命令注入](observium-ce-23.9/weathermap-fping-command-injection/复现情况.md) | 已动态复现；认证后经 Web editor 配置并触发渲染，执行权限为 www-data。 |
-| [skillhub](skillhub/) | [session-rating 路径遍历任意文件写入](skillhub/session-rating-path-traversal/复现情况.md) | 已动态复现；无认证 HTTP 路径。 |
-| [ubuntu-24.04.3-02](ubuntu-24.04.3-02/) | [LiteLLM MCP stdio 命令注入](ubuntu-24.04.3-02/litellm-mcp-stdio-command-injection/复现情况.md) | 已动态复现；需要有效 proxy API key，记录环境使用 admin 权限，执行权限为容器内 root。 |
+| [observium-ce-23.9](observium-ce-23.9/) | [System Path 命令注入](observium-ce-23.9/system-path-command-injection/复现情况.md) | 已动态复现；管理员修改路径配置后，经原生 Web 端点触发，Web 执行权限为 `www-data`。 |
+| [observium-ce-23.9](observium-ce-23.9/) | [Weathermap fping 命令注入](observium-ce-23.9/weathermap-fping-command-injection/复现情况.md) | 已动态复现；管理员经 Web editor 配置并触发渲染，执行权限为 `www-data`。 |
+| [skillhub](skillhub/) | [session-rating 路径遍历任意文件写入](skillhub/session-rating-path-traversal/复现情况.md) | 已动态复现；无认证 HTTP 路径，影响范围限定于目标容器文件系统。 |
+| [ubuntu-24.04.3-02](ubuntu-24.04.3-02/) | [LiteLLM MCP stdio 命令注入](ubuntu-24.04.3-02/litellm-mcp-stdio-command-injection/复现情况.md) | 已动态复现；需要有效 proxy API key，记录环境使用管理员权限，执行权限为容器内 `root`。 |
 | [ubuntu-26.04-desktop-amd64](ubuntu-26.04-desktop-amd64/) | [saltpoc reactor 命令注入](ubuntu-26.04-desktop-amd64/saltpoc-reactor-command-injection/复现情况.md) | 已动态复现；HTTP webhook 路径，前提为测试环境启用 `webhook_disable_auth` 及相应 reactor 配置。 |
 | [watchguard-firebox-12.11.2](watchguard-firebox-12.11.2/) | [CVE-2025-9242](watchguard-firebox-12.11.2/CVE-2025-9242/复现情况.md) | 待验证；已记录目标与公开 PoC，文档明确尚未在目标上执行 PoC。 |
 
-待验证候选完成动态验证与基准复核后，再纳入对应的已验证评测集。各轮 Agent 评测成绩依据实际运行记录单独汇总。
+样本的既有复现状态与本轮 Agent 评测结果分别记录。待验证候选完成动态验证与基准复核后，再纳入对应的已验证评测集。各轮 Agent 评测成绩依据实际运行记录单独汇总。
 
 ## 数据集构建
 
