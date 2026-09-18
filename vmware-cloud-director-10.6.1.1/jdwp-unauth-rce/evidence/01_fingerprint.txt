@@ -1,0 +1,44 @@
+# Evidence 01 — 无认证指纹与端口（采集自攻击机 192.168.101.x）
+$ ping -c2 192.168.98.x
+64 bytes from 192.168.98.x: icmp_seq=1 ttl=61 time=4.27 ms
+64 bytes from 192.168.98.x: icmp_seq=2 ttl=61 time=3.17 ms
+
+$ nc -zvw3 192.168.98.x 22 80 443 5480 8443 8080
+22   OPEN
+80   OPEN
+443  OPEN
+5480 OPEN
+8443 closed
+8080 closed
+
+$ for p in 5005 2016 2081 5488 5489 8998 8999 61616 1883 5432; do ...; done
+5005 OPEN       8998 OPEN       8999 OPEN       61616 OPEN
+2016 closed     2081 closed     5488 closed     5489 closed
+1883 closed     5432 closed (from this source)
+
+$ curl -sk -D - -o /dev/null https://192.168.98.x/
+HTTP/1.1 302 Found
+X-VMWARE-VCLOUD-REQUEST-ID: 10683895-971f-4994-9718-f94b73a0122d
+X-VMWARE-VCLOUD-CEIP-ID:    53f7f928-f5cc-47a5-b907-25cb89dad1f8
+Content-Type: text/html;charset=utf-8
+Location: /login
+
+$ curl -sk https://192.168.98.x/api/versions   # 公开 API 版本清单
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<SupportedVersions xmlns="http://www.vmware.com/vcloud/versions" ...>
+    <VersionInfo deprecated="true"><Version>37.0</Version> ... </VersionInfo>
+    ... 37.1 / 37.2 / 37.3 / 38.0 / 38.1 / 39.0 / 39.1
+
+$ curl -sk https://192.168.98.x/cloudapi/1.0.0/sessions/provider   # 无 Accept 版本头
+{"minorErrorCode":"NOT_ACCEPTABLE",
+ "message":"... Supported API versions are: [40.0.0-alpha, 39.1, 39.0, 38.1, 38.0, 37.3 [D], ...]"}
+
+$ curl -skL https://192.168.98.x/login
+<title>VMware Cloud Director</title>   （Angular 登录页；fqdn vcd01.lab.local）
+
+$ curl -sk -D - -o /dev/null https://192.168.98.x:5480/
+HTTP/1.1 200 OK
+Server: nginx
+Last-Modified: Tue, 07 Jan 2025 10:36:46 GMT
+Content-Security-Policy: default-src 'self'; ...
+（Angular VAMI 管理 UI）

@@ -1,0 +1,27 @@
+# Evidence 02 — 实际版本核验（经授权 SSH，root，只读）
+$ /opt/vmware/bin/vamicli version --appliance
+Version - 10.6.1.11883 Build 25088252
+Description - VMware vCloud Director
+
+$ hostname; uname -a; cat /etc/photon-release
+vcd01.lab.local
+Linux vcd01.lab.local 5.10.245-1.ph4 #1-photon SMP Fri Oct 10 09:53:32 UTC 2025 x86_64 GNU/Linux
+VMware Photon OS 4.0
+PHOTON_BUILD_NUMBER=4503bfc06
+
+$ cat /opt/vmware/vcloud-director/etc/java-version.properties
+expected.java.version=11.0.23.0.1
+
+$ /opt/vmware/vcloud-director/jre/bin/java -version
+openjdk version "11.0.23.0.1" 2024-07-16
+OpenJDK Runtime Environment (build 11.0.23.0.1+1-CPU)
+OpenJDK 64-Bit Server VM (build 11.0.23.0.1+1-CPU, mixed mode)
+
+$ nginx -v
+nginx version: nginx/1.26.3
+
+$ cat /opt/vmware/appliance/www/assets/config.json
+{ "applianceDeploymentType": "primary", "systemSetupComplete": true }
+
+$ cat /opt/vmware/etc/studio_version
+3.0.0.7 Build 24345548          # 这是 VMware Studio（建机框架）版本，不是产品版本

@@ -1,0 +1,39 @@
+# Evidence 06 — 放行效果（独立通道 root SSH 复核）与清理
+
+## 产物（由 JVM 派生子进程创建）
+$ ls -la /tmp/vcd_jdwp_poc_*
+-rw------- 1 vcloud vcloud 16 Sep 17 10:39 /tmp/vcd_jdwp_poc_host.txt
+-rw------- 1 vcloud vcloud 54 Sep 17 10:39 /tmp/vcd_jdwp_poc_id.txt
+
+$ cat /tmp/vcd_jdwp_poc_id.txt
+uid=1003(vcloud) gid=1002(vcloud) groups=1002(vcloud)
+
+$ cat /tmp/vcd_jdwp_poc_host.txt
+vcd01.lab.local
+
+$ ps -o user= -p 3171580
+vcloud
+# 产物属主 == JVM 用户 => 命令确由 cell JVM 派生的子进程执行
+
+## 利用后目标健康
+$ curl -sk -o /dev/null -w "%{http_code}" https://192.168.98.x/api/versions
+200
+$ systemctl is-active vmware-vcd ; ps -o pid,etime -p 3171580
+active
+3171580 36-19:05:41          # pid 未变、未重启
+
+## 清理
+$ rm -f /tmp/vcd_jdwp_poc_id.txt /tmp/vcd_jdwp_poc_host.txt
+$ ls -la /tmp/vcd_jdwp_poc_*
+ls: cannot access '/tmp/vcd_jdwp_poc_*': No such file or directory
+
+## 未验证的后续线索（单独记录）
+$ grep -n "vcloud" /etc/sudoers.d/vcd-ova-ui
+2:vcloud ALL = (postgres) NOPASSWD: /opt/vmware/vpostgres/current/bin/repmgr, .../failover-script.sh, ...
+3:vcloud ALL = (root) NOPASSWD:SETENV: /opt/vmware/appliance/api/vcd_ova_ui/venv/bin/python3 .../authenticate.py,
+     .../bin/api/systemSetup.py, .../nfsValidate.py, .../create-backup.sh, .../restore.py, .../listNfs.py,
+     .../mountNfs.py, /usr/bin/python3 .../bin/api/version.py
+4:vcloud ALL = (root) TIMEOUT=300s NOPASSWD:SETENV: /opt/vmware/appliance/bin/toggle-fips.sh
+5:vcloud ALL = (root) TIMEOUT=45s  NOPASSWD:SETENV: /opt/vmware/appliance/bin/api/fips.py
+6:vcloud ALL = (root) NOPASSWD: /usr/bin/systemctl reload vpostgres, /usr/bin/systemctl reload nginx
+# => vcloud(uid=1003) 可无口令以 root 运行若干 root 属主 python3 脚本；存在提权可能，本轮未做利用验证。

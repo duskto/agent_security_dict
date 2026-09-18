@@ -1,0 +1,17 @@
+### repeatability check 1
+=== mode=band target=192.168.188.x:2208 tls=False len=381 ===
+[bytes] 413
+[response-begin]
+<?xml version="1.0" encoding="UTF-8"?><BroadsoftDocument xmlns="C" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" protocol="OCI"><sessionId xmlns="">202606.bwas.com
+</sessionId><command xmlns="" xmlns:c="C" type="Error" xsi:type="c:ErrorResponse"><summary>[Error 5404] Unauthorized transaction.</summary><summaryEnglish>[Error 5404] Unauthorized transaction.</summaryEnglish></command></BroadsoftDocument>
+
+[response-end]
+
+### repeatability check 2
+=== mode=band target=192.168.188.x:2208 tls=False len=381 ===
+[bytes] 413
+[response-begin]
+<?xml version="1.0" encoding="UTF-8"?><BroadsoftDocument xmlns="C" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" protocol="OCI"><sessionId xmlns="">202606.bwas.com
+</sessionId><command xmlns="" xmlns:c="C" type="Error" xsi:type="c:ErrorResponse"><summary>[Error 5404] Unauthorized transaction.</summary><summaryEnglish>[Error 5404] Unauthorized transaction.</summaryEnglish></command></BroadsoftDocument>
+
+[response-end]
